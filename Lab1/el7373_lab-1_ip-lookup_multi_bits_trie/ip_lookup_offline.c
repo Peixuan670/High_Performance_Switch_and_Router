@@ -19,7 +19,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include "multibits_trie.h"
-#include "multibits_trie.h"
 
 //#define DEBUG
 
@@ -150,7 +149,7 @@ int main(int argc, char **argv)
 
     /* build binary trie */
     //bt_root = init_btnode();
-    mbt_root = init_MBtnode();
+    mbt_root = init_Mbtnode();
     parse_rules(argv[2], mbt_root);
 
     /* open file for sniffing */

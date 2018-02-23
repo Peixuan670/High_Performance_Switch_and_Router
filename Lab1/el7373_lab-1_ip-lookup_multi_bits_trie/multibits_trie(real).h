@@ -27,7 +27,7 @@ struct MBtNode{
 };
 
 /* Initialize Multi-bits trie node */
-MBtNode* init_MBtnode(){
+MBtNode* init_Mbtnode(){
     MBtNode *ret = (MBtNode *)malloc(sizeof(MBtNode));
     ret->node_0 = NULL;
     ret->node_1 = NULL;
@@ -50,62 +50,62 @@ MBtNode* init_MBtnode(){
 }
 
 /* Clean up binary trie */
-void free_bt(BtNode *root){
+void free_Mbt(MBtNode *root){
 
     if(root->node_0 != NULL){
-        free_bt(root->node_0);
+        free_Mbt(root->node_0);
     }
     if(root->node_1 != NULL){
-        free_bt(root->node_1);
+        free_Mbt(root->node_1);
     }
     if(root->node_2 != NULL){
-        free_bt(root->node_2);
+        free_Mbt(root->node_2);
     }
     if(root->node_3 != NULL){
-        free_bt(root->node_3);
+        free_Mbt(root->node_3);
     }
     if(root->node_4 != NULL){
-        free_bt(root->node_4);
+        free_Mbt(root->node_4);
     }
     if(root->node_5 != NULL){
-        free_bt(root->node_5);
+        free_Mbt(root->node_5);
     }
     if(root->node_6 != NULL){
-        free_bt(root->node_6);
+        free_Mbt(root->node_6);
     }
     if(root->node_7 != NULL){
-        free_bt(root->node_7);
+        free_Mbt(root->node_7);
     }
     if(root->node_8 != NULL){
-        free_bt(root->node_8);
+        free_Mbt(root->node_8);
     }
     if(root->node_9 != NULL){
-        free_bt(root->node_9);
+        free_Mbt(root->node_9);
     }
     if(root->node_a != NULL){
-        free_bt(root->node_a);
+        free_Mbt(root->node_a);
     }
     if(root->node_b != NULL){
-        free_bt(root->node_b);
+        free_Mbt(root->node_b);
     }
     if(root->node_c != NULL){
-        free_bt(root->node_c);
+        free_Mbt(root->node_c);
     }
     if(root->node_d != NULL){
-        free_bt(root->node_d);
+        free_Mbt(root->node_d);
     }
     if(root->node_e != NULL){
-        free_bt(root->node_e);
+        free_Mbt(root->node_e);
     }
     if(root->node_f != NULL){
-        free_bt(root->node_f);
+        free_Mbt(root->node_f);
     }
 
     free(root);
 }
 
 /* Insert a rule */
-void insert_rule(BtNode *root, uint32_t prefix, int prelen, int portnum){
+void insert_rule(MBtNode *root, uint32_t prefix, int prelen, int portnum){
     static int     n_rules = 0;
 
 #ifdef DEBUG
@@ -131,18 +131,18 @@ void insert_rule(BtNode *root, uint32_t prefix, int prelen, int portnum){
     }
 
     uint32_t    temp_prefix = prefix;
-    BtNode      *curr_node = root;
+    MBtNode      *curr_node = root;
     for(int i=0 ; i<prelen ; i++){
         int     curr_bit = (temp_prefix & 0x80000000) ? 1 : 0; // take the highest bit of the prefix
         if(curr_bit == 0){
             if(curr_node->left == NULL){
-                curr_node->left = init_btnode();
+                curr_node->left = init_Mbtnode();
             }
             curr_node = curr_node->left;
         }
         else{
             if(curr_node->right == NULL){
-                curr_node->right = init_btnode();
+                curr_node->right = init_Mbtnode();
             }
             curr_node = curr_node->right;
         }
