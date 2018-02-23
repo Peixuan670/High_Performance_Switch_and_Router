@@ -132,25 +132,113 @@ void insert_rule(MBtNode *root, uint32_t prefix, int prelen, int portnum){
 
     uint32_t    temp_prefix = prefix;
     MBtNode      *curr_node = root;
-    for(int i=0 ; i<prelen ; i++){
-        int     curr_bit = (temp_prefix & 0x80000000) ? 1 : 0; // take the highest bit of the prefix
+    for(int i=0 ; i<prelen ; i += 4){
+        int     curr_bit = ((temp_prefix & 0xf0000000) >> 28); // take the highest 4 bit of the prefix
         if(curr_bit == 0){
-            if(curr_node->left == NULL){
-                curr_node->left = init_Mbtnode();
+            if(curr_node->node_0 == NULL){
+                curr_node->node_0 = init_Mbtnode();
             }
-            curr_node = curr_node->left;
+            curr_node = curr_node->node_0;
         }
-        else{
-            if(curr_node->right == NULL){
-                curr_node->right = init_Mbtnode();
+        else if (curr_bit == 1) {
+            if(curr_node->node_1 == NULL){
+                curr_node->node_1 = init_Mbtnode();
             }
-            curr_node = curr_node->right;
+            curr_node = curr_node->node_1;
         }
-        temp_prefix = temp_prefix << 1;
+        else if (curr_bit == 2) {
+            if(curr_node->node_2 == NULL){
+                curr_node->node_2 = init_Mbtnode();
+            }
+            curr_node = curr_node->node_2;
+        }
+        else if (curr_bit == 3) {
+            if(curr_node->node_3 == NULL){
+                curr_node->node_3 = init_Mbtnode();
+            }
+            curr_node = curr_node->node_3;
+        }
+        else if (curr_bit == 4) {
+            if(curr_node->node_4 == NULL){
+                curr_node->node_4 = init_Mbtnode();
+            }
+            curr_node = curr_node->node_4;
+        }
+        else if (curr_bit == 5) {
+            if(curr_node->node_5 == NULL){
+                curr_node->node_5 = init_Mbtnode();
+            }
+            curr_node = curr_node->node_5;
+        }
+        else if (curr_bit == 6) {
+            if(curr_node->node_6 == NULL){
+                curr_node->node_6 = init_Mbtnode();
+            }
+            curr_node = curr_node->node_6;
+        }
+        else if (curr_bit == 7) {
+            if(curr_node->node_7 == NULL){
+                curr_node->node_7 = init_Mbtnode();
+            }
+            curr_node = curr_node->node_7;
+        }
+        else if (curr_bit == 8) {
+            if(curr_node->node_8 == NULL){
+                curr_node->node_8 = init_Mbtnode();
+            }
+            curr_node = curr_node->node_8;
+        }
+        else if (curr_bit == 9) {
+            if(curr_node->node_9 == NULL){
+                curr_node->node_9 = init_Mbtnode();
+            }
+            curr_node = curr_node->node_9;
+        }
+        else if (curr_bit == 10) {
+            if(curr_node->node_a == NULL){
+                curr_node->node_a = init_Mbtnode();
+            }
+            curr_node = curr_node->node_a;
+        }
+        else if (curr_bit == 11) {
+            if(curr_node->node_b == NULL){
+                curr_node->node_b = init_Mbtnode();
+            }
+            curr_node = curr_node->node_b;
+        }
+        else if (curr_bit == 12) {
+            if(curr_node->node_c == NULL){
+                curr_node->node_c = init_Mbtnode();
+            }
+            curr_node = curr_node->node_c;
+        }
+        else if (curr_bit == 13) {
+            if(curr_node->node_d == NULL){
+                curr_node->node_d = init_Mbtnode();
+            }
+            curr_node = curr_node->node_d;
+        }
+        else if (curr_bit == 14) {
+            if(curr_node->node_e == NULL){
+                curr_node->node_e = init_Mbtnode();
+            }
+            curr_node = curr_node->node_e;
+        }
+        else if (curr_bit == 15) {
+            if(curr_node->node_f == NULL){
+                curr_node->node_f = init_Mbtnode();
+            }
+            curr_node = curr_node->node_f;
+        }
+        else {
+            printf("%s\n", "Wrong prefix bits in insert_rule()");
+        }
+        temp_prefix = temp_prefix << 4;
     }
 
     if( curr_node->verdict != -1 ){
         fprintf(stderr, "Error: Rule #%d - overwriting a previous rule!! \n", n_rules);
+        return;
     }
     curr_node->verdict = portnum;
 }
