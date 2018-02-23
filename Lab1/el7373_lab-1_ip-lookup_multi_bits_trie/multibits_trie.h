@@ -12,7 +12,7 @@ struct MBtNode{
 };
 
 /* Initialize binary trie node */
-MBtNode* init_MBtnode(){
+MBtNode* init_Mbtnode(){
     MBtNode *ret = (MBtNode *)malloc(sizeof(MBtNode));
     ret->left = NULL;
     ret->right = NULL;
