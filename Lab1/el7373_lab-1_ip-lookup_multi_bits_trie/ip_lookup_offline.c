@@ -194,7 +194,11 @@ int main(int argc, char **argv)
     /* build binary trie */
     //bt_root = init_btnode();
     mbt_root = init_Mbtnode();
-    parse_rules(argv[2], mbt_root);
+    //parse_rules(argv[2], mbt_root);
+    for (int cur_prelen = 32; cur_prelen >=0; cur_prelen--) {
+    	parse_rules_prefix(argv[2], mbt_root, cur_prelen);
+    	//printf("Adding prefix length: %d\n",cur_prelen);
+    }
 
     /* open file for sniffing */
     descr = pcap_open_offline(argv[1], errbuf);

@@ -127,8 +127,9 @@ void insert_rule(MBtNode *root, uint32_t prefix, int prelen, int portnum){
     // TODO: prefix extension
     int mode = (prelen % 4);
     if (mode != 0) {
-        fprintf(stderr, "%s\n", "Skipped rule in insert_rule()");
-        return;
+        int offset = 1 << (31 - prelen);
+        insert_rule(root, prefix, prelen + 1, portnum);
+        insert_rule(root, prefix + offset, prelen + 1, portnum);
     }
 
     uint32_t    temp_prefix = prefix;
@@ -238,7 +239,7 @@ void insert_rule(MBtNode *root, uint32_t prefix, int prelen, int portnum){
     }
 
     if( curr_node->verdict != -1 ){
-        fprintf(stderr, "Error: Rule #%d - overwriting a previous rule!! \n", n_rules);
+        //fprintf(stderr, "Error: Rule #%d - overwriting a previous rule!! \n", n_rules);
         return;
     }
     curr_node->verdict = portnum;
