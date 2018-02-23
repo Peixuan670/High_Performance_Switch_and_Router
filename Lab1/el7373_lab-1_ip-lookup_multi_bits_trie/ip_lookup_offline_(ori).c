@@ -103,50 +103,6 @@ void parse_rules(char *in_fn, MBtNode *root){
 
 
 
-/* Parse the routing table file of a particular prefix length (in_fn is the variable for its file name) */
-void parse_rules_prefix(char *in_fn, MBtNode *root, int fix_len){
-    FILE        *fp;
-    char        pre_exp[100];      /* prefix expression, e.g. 1.2.3.0/24 */
-    int         portnum;    
-    in_addr     prefix_in_addr;
-    uint32_t    prefix;
-    int         prelen;
-
-    fp = fopen(in_fn, "r");
-    if( fp == NULL ){
-        fprintf(stderr, "Cannot read routing table file %s.\n", in_fn);
-        exit(1);
-    }
-
-    while( fscanf(fp, "%s %d\n", pre_exp, &portnum) != EOF ){
-        char *slash_ptr = strchr(pre_exp, '/');         /* Find '/' location in pre_exp */
-        if(slash_ptr != NULL){
-            char    dot_notation[100];
-            char    prelen_str[10];
-            strncpy(dot_notation, pre_exp, slash_ptr-pre_exp);
-            dot_notation[slash_ptr-pre_exp] = '\0';     /* Don't forget to add a '\0' to signal end of string! */
-            strncpy(prelen_str, slash_ptr+1, 3 );
-            prelen_str[3] = '\0';                       /* Don't forget to add a '\0' to signal end of string! */
-            inet_aton(dot_notation, &prefix_in_addr);   /* Convert string to in_addr */
-            prefix = htonl(prefix_in_addr.s_addr);      /* get the 32-bit integer in in_addr. htonl to correct the endian problem */
-            prelen = atoi(prelen_str);                  
-        }
-        else{
-            inet_aton(pre_exp, &prefix_in_addr);
-            prefix = htonl(prefix_in_addr.s_addr);      /* get the 32-bit integer in in_addr. htonl to correct the endian problem */
-            prelen = 32;
-        }
-
-        if (prelen == fix_len) {
-        	insert_rule(root, prefix, prelen, portnum);
-        }
-        
-    }
-}
-
-
-
-
 /* called upon every packet arrival */
 void my_callback(u_char *user, 
                  const struct pcap_pkthdr *pkthdr, 

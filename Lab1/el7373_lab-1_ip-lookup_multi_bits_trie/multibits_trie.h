@@ -4,18 +4,47 @@
 
 //#define DEBUG
 
+
 /* Structure of binary trie node */
 struct MBtNode{
-    MBtNode  *left;      /* for 0 */
-    MBtNode  *right;     /* for 1 */
+    MBtNode  *node_0;     /* for 0000 */
+    MBtNode  *node_1;     /* for 0001 */
+    MBtNode  *node_2;     /* for 0010 */
+    MBtNode  *node_3;     /* for 0011 */
+    MBtNode  *node_4;     /* for 0100 */
+    MBtNode  *node_5;     /* for 0101 */
+    MBtNode  *node_6;     /* for 0110 */
+    MBtNode  *node_7;     /* for 0111 */
+    MBtNode  *node_8;     /* for 1000 */
+    MBtNode  *node_9;     /* for 1001 */
+    MBtNode  *node_a;     /* for 1010 */
+    MBtNode  *node_b;     /* for 1011 */
+    MBtNode  *node_c;     /* for 1100 */
+    MBtNode  *node_d;     /* for 1101 */
+    MBtNode  *node_e;     /* for 1110 */
+    MBtNode  *node_f;     /* for 1111 */
     int     verdict;
 };
 
-/* Initialize binary trie node */
+/* Initialize Multi-bits trie node */
 MBtNode* init_Mbtnode(){
     MBtNode *ret = (MBtNode *)malloc(sizeof(MBtNode));
-    ret->left = NULL;
-    ret->right = NULL;
+    ret->node_0 = NULL;
+    ret->node_1 = NULL;
+    ret->node_2 = NULL;
+    ret->node_3 = NULL;
+    ret->node_4 = NULL;
+    ret->node_5 = NULL;
+    ret->node_6 = NULL;
+    ret->node_7 = NULL;
+    ret->node_8 = NULL;
+    ret->node_9 = NULL;
+    ret->node_a = NULL;
+    ret->node_b = NULL;
+    ret->node_c = NULL;
+    ret->node_d = NULL;
+    ret->node_e = NULL;
+    ret->node_f = NULL;
     ret->verdict = -1;
     return ret;
 }
@@ -23,11 +52,53 @@ MBtNode* init_Mbtnode(){
 /* Clean up binary trie */
 void free_Mbt(MBtNode *root){
 
-    if(root->left != NULL){
-        free_Mbt(root->left);
+    if(root->node_0 != NULL){
+        free_Mbt(root->node_0);
     }
-    if(root->right != NULL){
-        free_Mbt(root->right);
+    if(root->node_1 != NULL){
+        free_Mbt(root->node_1);
+    }
+    if(root->node_2 != NULL){
+        free_Mbt(root->node_2);
+    }
+    if(root->node_3 != NULL){
+        free_Mbt(root->node_3);
+    }
+    if(root->node_4 != NULL){
+        free_Mbt(root->node_4);
+    }
+    if(root->node_5 != NULL){
+        free_Mbt(root->node_5);
+    }
+    if(root->node_6 != NULL){
+        free_Mbt(root->node_6);
+    }
+    if(root->node_7 != NULL){
+        free_Mbt(root->node_7);
+    }
+    if(root->node_8 != NULL){
+        free_Mbt(root->node_8);
+    }
+    if(root->node_9 != NULL){
+        free_Mbt(root->node_9);
+    }
+    if(root->node_a != NULL){
+        free_Mbt(root->node_a);
+    }
+    if(root->node_b != NULL){
+        free_Mbt(root->node_b);
+    }
+    if(root->node_c != NULL){
+        free_Mbt(root->node_c);
+    }
+    if(root->node_d != NULL){
+        free_Mbt(root->node_d);
+    }
+    if(root->node_e != NULL){
+        free_Mbt(root->node_e);
+    }
+    if(root->node_f != NULL){
+        free_Mbt(root->node_f);
     }
 
     free(root);
@@ -53,27 +124,122 @@ void insert_rule(MBtNode *root, uint32_t prefix, int prelen, int portnum){
         return;
     }
 
+    // TODO: prefix extension
+    int mode = (prelen % 4);
+    if (mode != 0) {
+        fprintf(stderr, "%s\n", "Skipped rule in insert_rule()");
+        return;
+    }
+
     uint32_t    temp_prefix = prefix;
     MBtNode      *curr_node = root;
-    for(int i=0 ; i<prelen ; i++){
-        int     curr_bit = (temp_prefix & 0x80000000) ? 1 : 0; // take the highest bit of the prefix
+    for(int i=0 ; i<prelen ; i += 4){
+        int     curr_bit = ((temp_prefix & 0xf0000000) >> 28); // take the highest 4 bit of the prefix
         if(curr_bit == 0){
-            if(curr_node->left == NULL){
-                curr_node->left = init_Mbtnode();
+            if(curr_node->node_0 == NULL){
+                curr_node->node_0 = init_Mbtnode();
             }
-            curr_node = curr_node->left;
+            curr_node = curr_node->node_0;
         }
-        else{
-            if(curr_node->right == NULL){
-                curr_node->right = init_Mbtnode();
+        else if (curr_bit == 1) {
+            if(curr_node->node_1 == NULL){
+                curr_node->node_1 = init_Mbtnode();
             }
-            curr_node = curr_node->right;
+            curr_node = curr_node->node_1;
         }
-        temp_prefix = temp_prefix << 1;
+        else if (curr_bit == 2) {
+            if(curr_node->node_2 == NULL){
+                curr_node->node_2 = init_Mbtnode();
+            }
+            curr_node = curr_node->node_2;
+        }
+        else if (curr_bit == 3) {
+            if(curr_node->node_3 == NULL){
+                curr_node->node_3 = init_Mbtnode();
+            }
+            curr_node = curr_node->node_3;
+        }
+        else if (curr_bit == 4) {
+            if(curr_node->node_4 == NULL){
+                curr_node->node_4 = init_Mbtnode();
+            }
+            curr_node = curr_node->node_4;
+        }
+        else if (curr_bit == 5) {
+            if(curr_node->node_5 == NULL){
+                curr_node->node_5 = init_Mbtnode();
+            }
+            curr_node = curr_node->node_5;
+        }
+        else if (curr_bit == 6) {
+            if(curr_node->node_6 == NULL){
+                curr_node->node_6 = init_Mbtnode();
+            }
+            curr_node = curr_node->node_6;
+        }
+        else if (curr_bit == 7) {
+            if(curr_node->node_7 == NULL){
+                curr_node->node_7 = init_Mbtnode();
+            }
+            curr_node = curr_node->node_7;
+        }
+        else if (curr_bit == 8) {
+            if(curr_node->node_8 == NULL){
+                curr_node->node_8 = init_Mbtnode();
+            }
+            curr_node = curr_node->node_8;
+        }
+        else if (curr_bit == 9) {
+            if(curr_node->node_9 == NULL){
+                curr_node->node_9 = init_Mbtnode();
+            }
+            curr_node = curr_node->node_9;
+        }
+        else if (curr_bit == 10) {
+            if(curr_node->node_a == NULL){
+                curr_node->node_a = init_Mbtnode();
+            }
+            curr_node = curr_node->node_a;
+        }
+        else if (curr_bit == 11) {
+            if(curr_node->node_b == NULL){
+                curr_node->node_b = init_Mbtnode();
+            }
+            curr_node = curr_node->node_b;
+        }
+        else if (curr_bit == 12) {
+            if(curr_node->node_c == NULL){
+                curr_node->node_c = init_Mbtnode();
+            }
+            curr_node = curr_node->node_c;
+        }
+        else if (curr_bit == 13) {
+            if(curr_node->node_d == NULL){
+                curr_node->node_d = init_Mbtnode();
+            }
+            curr_node = curr_node->node_d;
+        }
+        else if (curr_bit == 14) {
+            if(curr_node->node_e == NULL){
+                curr_node->node_e = init_Mbtnode();
+            }
+            curr_node = curr_node->node_e;
+        }
+        else if (curr_bit == 15) {
+            if(curr_node->node_f == NULL){
+                curr_node->node_f = init_Mbtnode();
+            }
+            curr_node = curr_node->node_f;
+        }
+        else {
+            fprintf(stderr, "%s\n", "Wrong prefix bits in insert_rule()");
+        }
+        temp_prefix = temp_prefix << 4;
     }
 
     if( curr_node->verdict != -1 ){
         fprintf(stderr, "Error: Rule #%d - overwriting a previous rule!! \n", n_rules);
+        return;
     }
     curr_node->verdict = portnum;
 }
@@ -81,23 +247,79 @@ void insert_rule(MBtNode *root, uint32_t prefix, int prelen, int portnum){
 /* Look up an IP address (represented in a uint32_t) */
 int lookup_ip(MBtNode *root, uint32_t ip){
     uint32_t    temp_ip = ip;
-    MBtNode      *curr_node = root;
+    MBtNode     *curr_node = root;
     int         curr_verdict = root->verdict;
-    int         curr_bit = 0;
+    int         curr_bits = 0;
 
     while(1){
-        curr_bit = (temp_ip & 0x80000000) ? 1 : 0;
-        if(curr_bit == 0){
-            if(curr_node->left == NULL)     return curr_verdict;
-            else                            curr_node = curr_node->left;
+        curr_bits = (temp_ip & 0xf0000000) >> 28;
+        if(curr_bits == 0){
+            if(curr_node->node_0 == NULL)     return curr_verdict;
+            else                            curr_node = curr_node->node_0;
         }
-        else{
-            if(curr_node->right == NULL)    return curr_verdict;
-            else                            curr_node = curr_node->right;
+        else if(curr_bits == 1){
+            if(curr_node->node_1 == NULL)     return curr_verdict;
+            else                            curr_node = curr_node->node_1;
+        }
+        else if(curr_bits == 2){
+            if(curr_node->node_2 == NULL)     return curr_verdict;
+            else                            curr_node = curr_node->node_2;
+        }
+        else if(curr_bits == 3){
+            if(curr_node->node_3 == NULL)     return curr_verdict;
+            else                            curr_node = curr_node->node_3;
+        }
+        else if(curr_bits == 4){
+            if(curr_node->node_4 == NULL)     return curr_verdict;
+            else                            curr_node = curr_node->node_4;
+        }
+        else if(curr_bits == 5){
+            if(curr_node->node_5 == NULL)     return curr_verdict;
+            else                            curr_node = curr_node->node_5;
+        }
+        else if(curr_bits == 6){
+            if(curr_node->node_6 == NULL)     return curr_verdict;
+            else                            curr_node = curr_node->node_6;
+        }
+        else if(curr_bits == 7){
+            if(curr_node->node_7 == NULL)     return curr_verdict;
+            else                            curr_node = curr_node->node_7;
+        }
+        else if(curr_bits == 8){
+            if(curr_node->node_8 == NULL)     return curr_verdict;
+            else                            curr_node = curr_node->node_8;
+        }
+        else if(curr_bits == 9){
+            if(curr_node->node_9 == NULL)     return curr_verdict;
+            else                            curr_node = curr_node->node_9;
+        }
+        else if(curr_bits == 10){
+            if(curr_node->node_a == NULL)     return curr_verdict;
+            else                            curr_node = curr_node->node_a;
+        }
+        else if(curr_bits == 11){
+            if(curr_node->node_b == NULL)     return curr_verdict;
+            else                            curr_node = curr_node->node_b;
+        }
+        else if(curr_bits == 12){
+            if(curr_node->node_c == NULL)     return curr_verdict;
+            else                            curr_node = curr_node->node_c;
+        }
+        else if(curr_bits == 13){
+            if(curr_node->node_d == NULL)     return curr_verdict;
+            else                            curr_node = curr_node->node_d;
+        }
+        else if(curr_bits == 14){
+            if(curr_node->node_e == NULL)     return curr_verdict;
+            else                            curr_node = curr_node->node_e;
+        }
+        else if(curr_bits == 15){
+            if(curr_node->node_f == NULL)     return curr_verdict;
+            else                            curr_node = curr_node->node_f;
         }
 
         /* update verdict if current node has an non-empty verdict */
         curr_verdict = (curr_node->verdict == -1) ? curr_verdict : curr_node->verdict;
-        temp_ip = temp_ip << 1;
+        temp_ip = temp_ip << 4;
     }
 }
