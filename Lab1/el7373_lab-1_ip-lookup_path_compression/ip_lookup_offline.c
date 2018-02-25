@@ -69,7 +69,7 @@ void path_compress(PCtNode *cur_node, PCtNode *prev_node){
         path_compress(cur_node -> right, cur_node);
     }
     // Path compression
-    if ((cur_node -> left != NULL) && (cur_node -> right == NULL)) {
+    if ((cur_node -> left != NULL) && (cur_node -> right == NULL) && (cur_node -> verdict == -1)) {
         // most significant bit = 0, no need to modify segment
         cur_node -> left -> skip++;
         if (prev_node -> left == cur_node) {
@@ -83,7 +83,7 @@ void path_compress(PCtNode *cur_node, PCtNode *prev_node){
             return;
         }
     }
-    if ((cur_node -> left == NULL) && (cur_node -> right != NULL)) {
+    if ((cur_node -> left == NULL) && (cur_node -> right != NULL) && (cur_node -> verdict == -1)) {
         cur_node -> right -> segment += (1 << cur_node -> right -> skip);
         cur_node -> right -> skip++;
         if (prev_node -> left == cur_node) {
@@ -99,6 +99,21 @@ void path_compress(PCtNode *cur_node, PCtNode *prev_node){
     }
 }
 
+void print_trie(PCtNode *cur_node) {
+
+    printf("skip = %d, segment = %x, port = %d\n", cur_node -> skip, cur_node -> segment, cur_node -> verdict);
+
+    if ((cur_node -> left == NULL) && (cur_node -> right == NULL)) {
+        return;
+    }
+    if (cur_node -> left != NULL) {
+        print_trie(cur_node -> left);
+    }
+    if (cur_node -> right != NULL) {
+        print_trie(cur_node -> right);
+    }
+
+}
 
 /* Parse the routing table file (in_fn is the variable for its file name) */
 void parse_rules(char *in_fn, PCtNode *root){
@@ -137,6 +152,9 @@ void parse_rules(char *in_fn, PCtNode *root){
         insert_rule(root, prefix, prelen, portnum);
     }
 
+    printf("Print Binary Trie: \n");
+    print_trie(root); // Debug, print original binary trie
+
     // TODO: path-compression (post-order traverse the trie)
     if (root -> left != NULL) {
         path_compress(root -> left, root);
@@ -144,6 +162,9 @@ void parse_rules(char *in_fn, PCtNode *root){
     if (root -> right != NULL) {
         path_compress(root -> right, root);
     }
+
+    printf("Print PC Trie: \n");
+    print_trie(root); // Debug, print path-compressed trie
 }
 
 
