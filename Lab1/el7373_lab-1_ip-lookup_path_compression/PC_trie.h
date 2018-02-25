@@ -21,7 +21,7 @@ PCtNode* init_pctnode(){
     ret->right = NULL;
     ret->verdict = -1;
     ret->skip = 0;
-    ret->segment = -1;
+    ret->segment = 0;
     return ret;
 }
 

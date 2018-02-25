@@ -58,25 +58,44 @@ struct PCtNode                  *pct_root;      /* pointer to the root node of t
 unsigned long int               pkt_cnt = 0;    /* total processed packet # */
 std::map<int, int>              counters;       /* use a STL map to keep counters of each port */
 
-
-void path_compress(PCtNode *cur_node PCNode *prev_node){
+void path_compress(PCtNode *cur_node, PCtNode *prev_node){
     if ((cur_node -> left == NULL) && (cur_node -> right == NULL)) {
         return;
     }
     if (cur_node -> left != NULL) {
-        path_compress(cur_node -> left);
+        path_compress(cur_node -> left, cur_node);
     }
     if (cur_node -> right != NULL) {
-        path_compress(cur_node -> right);
+        path_compress(cur_node -> right, cur_node);
     }
     // Path compression
     if ((cur_node -> left != NULL) && (cur_node -> right == NULL)) {
-        cur_node -> left -> skip += 1;
-        cur_node -> skip = cur_node -
-
+        // most significant bit = 0, no need to modify segment
+        cur_node -> left -> skip++;
+        if (prev_node -> left == cur_node) {
+            prev_node -> left = cur_node -> left;
+            free(cur_node);
+            return;
+        } 
+        if (prev_node -> right == cur_node) {
+            prev_node -> right = cur_node -> left;
+            free(cur_node);
+            return;
+        }
     }
     if ((cur_node -> left == NULL) && (cur_node -> right != NULL)) {
-
+        cur_node -> right -> segment += (1 << cur_node -> right -> skip);
+        cur_node -> right -> skip++;
+        if (prev_node -> left == cur_node) {
+            prev_node -> left = cur_node -> right;
+            free(cur_node);
+            return;
+        }
+        if (prev_node -> right == cur_node) {
+            prev_node -> right = cur_node -> right;
+            free(cur_node);
+            return;
+        }
     }
 }
 
@@ -119,6 +138,12 @@ void parse_rules(char *in_fn, PCtNode *root){
     }
 
     // TODO: path-compression (post-order traverse the trie)
+    if (root -> left != NULL) {
+        path_compress(root -> left, root);
+    }
+    if (root -> right != NULL) {
+        path_compress(root -> right, root);
+    }
 }
 
 
