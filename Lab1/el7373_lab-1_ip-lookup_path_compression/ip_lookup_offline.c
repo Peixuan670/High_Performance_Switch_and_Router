@@ -54,11 +54,31 @@ struct sniff_ip {
 
 const struct sniff_ethernet     *eth_hdr;
 const struct sniff_ip           *ip_hdr;
-struct PCtNode                  *pct_root;       /* pointer to the root node of the binary tree */
+struct PCtNode                  *pct_root;      /* pointer to the root node of the binary tree */
 unsigned long int               pkt_cnt = 0;    /* total processed packet # */
 std::map<int, int>              counters;       /* use a STL map to keep counters of each port */
 
 
+void path_compress(PCtNode *cur_node PCNode *prev_node){
+    if ((cur_node -> left == NULL) && (cur_node -> right == NULL)) {
+        return;
+    }
+    if (cur_node -> left != NULL) {
+        path_compress(cur_node -> left);
+    }
+    if (cur_node -> right != NULL) {
+        path_compress(cur_node -> right);
+    }
+    // Path compression
+    if ((cur_node -> left != NULL) && (cur_node -> right == NULL)) {
+        cur_node -> left -> skip += 1;
+        cur_node -> skip = cur_node -
+
+    }
+    if ((cur_node -> left == NULL) && (cur_node -> right != NULL)) {
+
+    }
+}
 
 
 /* Parse the routing table file (in_fn is the variable for its file name) */
@@ -97,6 +117,8 @@ void parse_rules(char *in_fn, PCtNode *root){
 
         insert_rule(root, prefix, prelen, portnum);
     }
+
+    // TODO: path-compression (post-order traverse the trie)
 }
 
 
