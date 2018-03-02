@@ -88,10 +88,10 @@ int get_mask(int prelen) {
     int mask = 0;
     long offset = pow(2L, prelen) - 1;
     //fprintf(stderr, "input prefix:%d - output mask:%x - offset:%x \n", prelen, ((mask + offset) << (31 - prelen)), offset);
-    return ((mask + offset) << (31 - prelen));
+    return ((mask + offset) << (32 - prelen));
 }
 
-int match_segment(int temp_ip, int skip, int segment) {
+int match_segment(unsigned int temp_ip, int skip, unsigned int segment) {
     if (skip == 0) {
         return 1;
     }

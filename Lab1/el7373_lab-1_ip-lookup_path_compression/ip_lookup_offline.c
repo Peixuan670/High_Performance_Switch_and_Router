@@ -71,6 +71,7 @@ void path_compress(PCtNode *cur_node, PCtNode *prev_node){
     // Path compression
     if ((cur_node -> left != NULL) && (cur_node -> right == NULL) && (cur_node -> verdict == -1)) {
         // most significant bit = 0, no need to modify segment
+        //printf("Compressing 0, segment = %x\n", cur_node -> left -> segment);
         cur_node -> left -> skip++;
         if (prev_node -> left == cur_node) {
             prev_node -> left = cur_node -> left;
@@ -85,6 +86,7 @@ void path_compress(PCtNode *cur_node, PCtNode *prev_node){
     }
     if ((cur_node -> left == NULL) && (cur_node -> right != NULL) && (cur_node -> verdict == -1)) {
         cur_node -> right -> segment += (1 << cur_node -> right -> skip);
+        //printf("Compressing 1, segment = %x, adding %x, shifting %d\n", cur_node -> right -> segment, (1 << (cur_node -> right -> skip)), cur_node -> right -> skip);
         cur_node -> right -> skip++;
         if (prev_node -> left == cur_node) {
             prev_node -> left = cur_node -> right;
@@ -152,8 +154,8 @@ void parse_rules(char *in_fn, PCtNode *root){
         insert_rule(root, prefix, prelen, portnum);
     }
 
-    printf("Print Binary Trie: \n");
-    print_trie(root); // Debug, print original binary trie
+    //printf("Print Binary Trie: \n");
+    //print_trie(root); // Debug, print original binary trie
 
     // TODO: path-compression (post-order traverse the trie)
     if (root -> left != NULL) {
@@ -163,8 +165,8 @@ void parse_rules(char *in_fn, PCtNode *root){
         path_compress(root -> right, root);
     }
 
-    printf("Print PC Trie: \n");
-    print_trie(root); // Debug, print path-compressed trie
+    //printf("Print PC Trie: \n");
+    //print_trie(root); // Debug, print path-compressed trie
 }
 
 
@@ -240,5 +242,6 @@ int main(int argc, char **argv)
     fprintf(stderr, "Done with packet processing! Looked up %ld packets.\n", pkt_cnt);        
     free_pct(pct_root);
 
-    return 0;       
+    return 0;
+
 }
